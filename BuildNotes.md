@@ -1,155 +1,71 @@
-# Flipper Zero Firmware
+# archAhazi's Notes on modifying firmware for the Flipper Zero
 
-[![Discord](https://img.shields.io/discord/740930220399525928.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](http://flipperzero.one/discord)
+I am using Windows 10 (64-bit) on a laptop
 
-![Show me the code](https://habrastorage.org/webt/eo/m0/e4/eom0e4btudte7nrhnyic-laiog0.png)
+# Prerequisites
 
-Welcome to [Flipper Zero](https://flipperzero.one/)'s Firmware repo!
-Our goal is to create nice and clean code with good documentation, to make it a pleasure for everyone to work with.
+Install Git
+    https://git-scm.com/downloads
 
-# Update firmware
+Install VSCode
+    https://code.visualstudio.com/docs/?dv=win
+    
+Install Docker
+    Install [Docker Engine and Docker Compose](https://www.docker.com/get-started)
+    
+Install qFlipper
+    https://flipperzero.one/update
+    
+# Clone the Firmware repository
 
-[Get Latest Firmware from Update Server](https://update.flipperzero.one/)
+Create the project directory in a prferred location on your harddrive.
+Go into the folder
 
-Flipper Zero's firmware consists of two components:
+Get the firmware from FlipperDevices
+Open the command prompt (I ran as admin, donno if it matters)
+```sh
+git clone https://github.com/flipperdevices/flipperzero-firmware.git
+```
 
-- Core2 firmware set - proprietary components by ST: FUS + radio stack. FUS is flashed at factory and you should never update it.
-- Core1 Firmware - HAL + OS + Drivers + Applications.
+I also made sure to download any submodules while still in the flipperzero-firmware directory
+```sh
+git submodule update --init
+```
+#  Do your Code thing
 
-They both must be flashed in order described.
+Make modifications to the firmware
+    DroomOne has a good starter for that
+    https://github.com/DroomOne/Flipper-Plugin-Tutorial
+    
+#  Docker Time
 
-## With STLink
-
-### Core1 Firmware
-
-Prerequisites:
-
-- Linux / macOS
-- Terminal
-- [arm-gcc-none-eabi](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-- openocd
-
-One liner: `make flash`
-
-### Core2 flashing procedures
-
-Prerequisites:
-
-- Linux / macOS
-- Terminal
-- STM32_Programmer_CLI (v2.5.0) added to $PATH
-
-One liner: `make flash_radio`
-
-## With USB DFU 
-
-1. Download latest [Firmware](https://update.flipperzero.one)
-
-2. Reboot Flipper to Bootloader
- - Press and hold `← Left` + `↩ Back` for reset 
- - Release `↩ Back` and keep holding `← Left` until blue LED lights up
- - Release `← Left`
-<!-- ![Switch to DFU sequence](https://habrastorage.org/webt/uu/c3/g2/uuc3g2n36f2sju19rskcvjzjf6w.png) -->
-
-3. Run `dfu-util -D full.dfu -a 0`
-
-# Build with Docker
-
-## Prerequisites
-
-1. Install [Docker Engine and Docker Compose](https://www.docker.com/get-started)
-2. Prepare the container:
+I deep dived into Docker to understand it better, sorry no TL;DR for what I learned.
+Watch some videos and RTFMan
+     This video was very helpful.  Well worth the 90 minutes 
+     flipphttps://www.youtube.com/watch?v=3c-iBn73dDE
+     
+Prepare the container:
 
  ```sh
  docker-compose up -d
  ```
 
-## Compile everything
-
+Compile everything
+    This step initially dod not work for me originally because I had downloaded the repository and not CLONED it 
+    and did not git the submodules as referenced above.
 ```sh
 docker-compose exec dev make
 ```
 
 Check `dist/` for build outputs.
+The dist folder is in your project directory with all the other firmware repository files.
 
-Use **`flipper-z-{target}-full-{suffix}.dfu`** to flash your device.
+# Install Firmware!!!
 
-# Build on Linux/macOS
+Plug in your flipper to your Windows 10 computer.
 
-## macOS Prerequisites
+Click the Install from file below the big INSTALL button
 
-Make sure you have [brew](https://brew.sh) and install all the dependencies:
-```sh
-brew bundle --verbose
-```
+Find your .dfu file in the dist folder and Open
 
-## Linux Prerequisites
-
-### gcc-arm-none-eabi
-
-```sh
-toolchain="gcc-arm-none-eabi-10.3-2021.10"
-toolchain_package="$toolchain-$(uname -m)-linux"
-
-wget -P /opt "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/$toolchain_package.tar.bz2"
-
-tar xjf /opt/$toolchain_package.tar.bz2 -C /opt
-rm /opt/$toolchain_package.tar.bz2
-
-for file in /opt/$toolchain/bin/* ; do ln -s "${file}" "/usr/bin/$(basename ${file})" ; done
-```
-
-### Optional dependencies
-
-- openocd (debugging/flashing over SWD)
-- heatshrink (compiling image assets)
-- clang-format (code formatting)
-- dfu-util (flashing over USB DFU)
-- protobuf (compiling proto sources)
-
-For example, to install them on Debian, use:
-```sh
-apt update
-apt install openocd clang-format-13 dfu-util protobuf-compiler
-```
-
-heatshrink has to be compiled [from sources](https://github.com/atomicobject/heatshrink).
-
-## Compile everything
-
-```sh
-make
-```
-
-Check `dist/` for build outputs.
-
-Use **`flipper-z-{target}-full-{suffix}.dfu`** to flash your device.
-
-## Flash everything
-
-Connect your device via ST-Link and run:
-```sh
-make whole
-```
-
-# Links
-
-* Discord: [flipp.dev/discord](https://flipp.dev/discord)
-* Website: [flipperzero.one](https://flipperzero.one)
-* Kickstarter page: [kickstarter.com](https://www.kickstarter.com/projects/flipper-devices/flipper-zero-tamagochi-for-hackers)
-* Forum: [forum.flipperzero.one](https://forum.flipperzero.one/)
-
-# Project structure
-
-- `applications`    - Applications and services used in firmware
-- `assets`          - Assets used by applications and services
-- `core`            - Furi Core: os level primitives and helpers
-- `debug`           - Debug tool: GDB-plugins, SVD-file and etc
-- `docker`          - Docker image sources (used for firmware build automation)
-- `documentation`   - Documentation generation system configs and input files
-- `firmware`        - Firmware source code
-- `lib`             - Our and 3rd party libraries, drivers and etc...
-- `make`            - Make helpers
-- `scripts`         - Supplementary scripts and python libraries home
-
-Also pay attention to `ReadMe.md` files inside of those directories.
+# PROFIT!!!
