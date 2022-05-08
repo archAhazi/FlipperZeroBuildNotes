@@ -63,7 +63,7 @@ Compile everything
 docker-compose exec dev make
 ```
 
-Check `dist/` for build outputs.
+Check `dist/` for build outputs in the f7 folder.
 The dist folder is in your project directory with all the other firmware repository files.
 
 # Install Firmware!!!
@@ -74,6 +74,6 @@ Open qFlipper.
 
 Click the Install from file below the big INSTALL button
 
-Find your .dfu file in the dist folder and Open
+Find your .dfu file in the dist/f7/ folder and Open
 
 # PROFIT!!!
