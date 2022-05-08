@@ -70,6 +70,8 @@ The dist folder is in your project directory with all the other firmware reposit
 
 Plug in your flipper to your Windows 10 computer.
 
+Open qFlipper.
+
 Click the Install from file below the big INSTALL button
 
 Find your .dfu file in the dist folder and Open
