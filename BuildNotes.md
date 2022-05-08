@@ -5,15 +5,19 @@ I am using Windows 10 (64-bit) on a laptop
 # Prerequisites
 
 Install Git
+
     https://git-scm.com/downloads
 
 Install VSCode
+
     https://code.visualstudio.com/docs/?dv=win
     
 Install Docker
+
     Install [Docker Engine and Docker Compose](https://www.docker.com/get-started)
     
 Install qFlipper
+
     https://flipperzero.one/update
     
 # Clone the Firmware repository
@@ -35,6 +39,7 @@ git submodule update --init
 
 Make modifications to the firmware
     DroomOne has a good starter for that
+    
     https://github.com/DroomOne/Flipper-Plugin-Tutorial
     
 #  Docker Time
@@ -42,7 +47,8 @@ Make modifications to the firmware
 I deep dived into Docker to understand it better, sorry no TL;DR for what I learned.
 Watch some videos and RTFMan
      This video was very helpful.  Well worth the 90 minutes 
-     flipphttps://www.youtube.com/watch?v=3c-iBn73dDE
+     
+     https://www.youtube.com/watch?v=3c-iBn73dDE
      
 Prepare the container:
 
